@@ -200,7 +200,7 @@ export default function Navbar() {
                     Login
                   </a>
                   <a
-                    href="/signup"
+                    href="/register"
                     className="hidden md:block bg-gradient-to-r from-purple-600 to-green-600 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:from-purple-700 hover:to-green-700 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-purple-500/30"
                   >
                     Sign Up
@@ -370,7 +370,7 @@ export default function Navbar() {
                   Login
                 </a>
                 <a
-                  href="/signup"
+                  href="/register"
                   className="block w-full text-center bg-gradient-to-r from-purple-600 to-green-600 text-white px-4 py-3 rounded-lg text-base font-semibold hover:from-purple-700 hover:to-green-700 transition shadow-lg hover:shadow-purple-500/30"
                   onClick={() => setMobileMenuOpen(false)}
                 >

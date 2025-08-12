@@ -1,30 +1,41 @@
 "use client";
 
 import { useState } from "react";
-import { login } from "../../services/auth";
+import { register } from "../../services/auth";
 import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
+  const [name, setName] = useState("Test User");
   const [email, setEmail] = useState("test@example.com");
   const [password, setPassword] = useState("password");
+  const [password_confirmation, setPasswordConfirmation] = useState("password");
   const [error, setError] = useState("");
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     try {
       setError("");
-      const data = await login(email, password);
-      console.log("Login success:", data);
+      const data = await register(name, email, password, password_confirmation);
+      console.log("Register success:", data);
       router.push("/"); // সফল হলে হোম পেজে পাঠাবে
     } catch (err) {
-      setError("Invalid email or password");
+      setError("Registration failed");
     }
   };
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Login</h1>
+      <h1>Register</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <div>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
 
       <div>
         <input
@@ -44,7 +55,16 @@ export default function LoginPage() {
         />
       </div>
 
-      <button onClick={handleLogin}>Login</button>
+      <div>
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={password_confirmation}
+          onChange={(e) => setPasswordConfirmation(e.target.value)}
+        />
+      </div>
+
+      <button onClick={handleRegister}>Register</button>
     </div>
   );
 }
