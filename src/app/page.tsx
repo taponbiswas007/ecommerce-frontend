@@ -1,55 +1,54 @@
-import CategorySection from "./components/CategorySection";
-import HeroSlider from "./components/HeroSlider";
-import Navbar from "./components/Navbar";
 import { fetchProducts } from "@/lib/api";
-import type { CategoryWithProducts, Product } from "@/types";
+import CategorySection from "@/components/home/CategorySection";
+import { Product } from "@/types";
+import Navbar from "@/components/shared/Navbar";
+import HeroSlider from "@/components/home/HeroSlider";
 
-export default async function HomePage() {
-  // Fetch products from API
+export default async function Home() {
+  // Fetch all active products from your API
   const products = await fetchProducts();
 
   // Group products by category
-  const categoriesMap = new Map<number, CategoryWithProducts>();
+  const categoriesMap = new Map<
+    number,
+    {
+      id: number;
+      name: string;
+      products: any[];
+    }
+  >();
 
   products.forEach((product: Product) => {
-    if (!categoriesMap.has(product.category_id)) {
-      categoriesMap.set(product.category_id, {
-        id: product.category_id,
+    if (!product.category) return; // Skip if product has no category
+
+    if (!categoriesMap.has(product.category.id)) {
+      categoriesMap.set(product.category.id, {
+        id: product.category.id,
         name: product.category.name,
         products: [],
       });
     }
-    categoriesMap.get(product.category_id)?.products.push(product);
+    categoriesMap.get(product.category.id)?.products.push(product);
   });
 
   const categories = Array.from(categoriesMap.values());
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div>
       <Navbar />
       <HeroSlider />
-
       <div className="container mx-auto px-4 py-8">
-        {/* Featured Categories Section */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-800">
-            Shop by Category
-          </h2>
+        <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
+          Our Products
+        </h1>
 
-          {categories.map((category) => (
-            <CategorySection key={category.id} category={category} />
-          ))}
-        </section>
-
-        {/* Welcome Message (optional) */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h1 className="text-2xl font-bold mb-4 text-gray-800">
-            Welcome to Our Ecommerce Store
-          </h1>
-          <p className="text-gray-600">
-            Discover amazing products in our carefully curated collections.
-          </p>
-        </div>
+        {categories.map((category) => (
+          <CategorySection
+            key={category.id}
+            category={category}
+            products={category.products}
+          />
+        ))}
       </div>
     </div>
   );
